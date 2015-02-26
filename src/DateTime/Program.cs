@@ -10,7 +10,7 @@
             {
                 CommandLineParser commandLineParser = new CommandLineParser();
 
-                if (commandLineParser.IsSwitchSet("?", "h", "help"))
+                if (commandLineParser.IsOptionSet("?", "h", "help"))
                 {
                     Console.WriteLine("Prints date and/or time in specified format | https://github.com/vurdalakov/dostools");
                     Console.WriteLine("Examples:");
@@ -22,7 +22,7 @@
 
                 DateTime dateTime = DateTime.Now;
 
-                Int32 addDays = commandLineParser.GetOptionInt32("adddays");
+                Int32 addDays = commandLineParser.GetOptionInt("adddays", 0);
                 if (addDays != 0)
                 {
                     dateTime = dateTime.AddDays(addDays);
@@ -34,7 +34,7 @@
 
                 Console.Write(text);
 
-                if (commandLineParser.IsSwitchSet("newline"))
+                if (commandLineParser.IsOptionSet("newline"))
                 {
                     Console.WriteLine();
                 }

@@ -4,12 +4,13 @@
     using System.Collections.Generic;
     using System.IO;
 
-    // Command format: [/switch] [/option=value] [filename1 [filename2 ...]]
+    // Command format: [/option] [/option=value] [filename1 [filename2 ...]]
+
     public class CommandLineParser
     {
-        private readonly Dictionary<String, String> options = new Dictionary<String, String>();
+        private readonly Dictionary<String, String> _options = new Dictionary<String, String>(StringComparer.InvariantCultureIgnoreCase);
 
-        public CommandLineParser(Char[] prefixes = null, Char[] valueSeparators = null)
+        public CommandLineParser(Char[] prefixes = null, Char[] valueSeparators = null, Boolean caseInsensitiveNames = true)
         {
             if (null == prefixes)
             {
@@ -21,7 +22,9 @@
                 valueSeparators = new[] { '=', ':' };
             }
 
-            this.ParseArguments(prefixes, valueSeparators);
+            _options = new Dictionary<String, String>(caseInsensitiveNames ? StringComparer.InvariantCultureIgnoreCase : null);
+
+            ParseArguments(prefixes, valueSeparators);
         }
 
         public String ExecutableFileName { get; private set; }
@@ -30,16 +33,16 @@
 
         public String[] FileNames { get; private set; }
 
-        public Boolean IsSwitchSet(String switchName)
+        public Boolean IsOptionSet(String optionName)
         {
-            return this.options.ContainsKey(switchName.ToLower());
+            return _options.ContainsKey(optionName);
         }
 
-        public Boolean IsSwitchSet(params String[] switchNames)
+        public Boolean IsOptionSet(params String[] optionNames)
         {
-            foreach (String switchName in switchNames)
+            foreach (var optionName in optionNames)
             {
-                if (this.IsSwitchSet(switchName))
+                if (IsOptionSet(optionName))
                 {
                     return true;
                 }
@@ -48,59 +51,103 @@
             return false;
         }
 
-        public String GetOptionString(String optionName, String defaultValue = null)
+        public Boolean OptionHasValue(String optionName)
         {
-            return this.IsSwitchSet(optionName) ? this.options[optionName.ToLower()] : defaultValue;
+            return IsOptionSet(optionName) && String.IsNullOrEmpty(_options[optionName]);
         }
 
-        public Int32 GetOptionInt32(String optionName, Int32 defaultValue = 0)
+        public Boolean OptionHasValue(params String[] optionNames)
+        {
+            foreach (var optionName in optionNames)
+            {
+                if (OptionHasValue(optionName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public String GetOptionString(String optionName, String defaultValue)
+        {
+            return OptionHasValue(optionName) ? _options[optionName] : defaultValue;
+        }
+
+        public String GetOptionString(params String[] optionNames)
+        {
+            foreach (var optionName in optionNames)
+            {
+                if (OptionHasValue(optionName))
+                {
+                    return GetOptionString(optionName, null);
+                }
+            }
+
+            return null;
+        }
+
+        public Int32 GetOptionInt(String optionName, Int32 defaultValue)
         {
             try
             {
-                return this.IsSwitchSet(optionName) ? Convert.ToInt32(this.GetOptionString(optionName)) : defaultValue;
+                return OptionHasValue(optionName) ? Convert.ToInt32(GetOptionString(optionName, null)) : defaultValue;
             }
             catch
             {
-                throw new ArgumentException(String.Format("'/{0}' option does not contain a valid 32-bit integer value", optionName));
+                return defaultValue;
             }
+        }
+
+        public Int32 GetOptionInt(params String[] optionNames)
+        {
+            foreach (var optionName in optionNames)
+            {
+                if (OptionHasValue(optionName))
+                {
+                    return GetOptionInt(optionName, 0);
+                }
+            }
+
+            return 0;
         }
 
         private void ParseArguments(Char[] prefixes, Char[] valueSeparators)
         {
-            String[] args = Environment.GetCommandLineArgs();
+            var args = Environment.GetCommandLineArgs();
 
-            this.ExecutableFileName = args[0];
-            this.ExecutablePath = Path.GetDirectoryName(this.ExecutableFileName);
+            ExecutableFileName = args[0];
+            ExecutablePath = Path.GetDirectoryName(ExecutableFileName);
 
-            List<String> fileNames = new List<String>();
+            var fileNames = new List<String>();
 
             for (int i = 1; i < args.Length; i++)
             {
-                String s = args[i];
+                var s = args[i];
 
                 if (String.IsNullOrEmpty(s))
                 {
                     // just skip
                 }
-                else if (s.IndexOfAny(prefixes) < 0) // file names
+                else if (0 == s.IndexOfAny(prefixes)) // options
+                {
+                    if (s.IndexOfAny(valueSeparators) > 0) // option with value
+                    {
+                        var optionParts = s.Split(valueSeparators);
+                        _options.Add(optionParts[0].TrimStart(prefixes).ToLower(), optionParts[1]);
+                    }
+                    else // option without value
+                    {
+                        _options.Add(s.TrimStart(prefixes).ToLower(), null);
+                    }
+                }
+                else // file names
                 {
                     fileNames.Add(s);
                 }
-                else
-                {
-                    if (s.IndexOfAny(valueSeparators) > 0) // option
-                    {
-                        String[] optionParts = s.Split(valueSeparators);
-                        this.options.Add(optionParts[0].TrimStart(prefixes).ToLower(), optionParts[1]);
-                    }
-                    else // switch
-                    {
-                        this.options.Add(s.TrimStart(prefixes).ToLower(), null);
-                    }
-                }
             }
 
-            this.FileNames = fileNames.ToArray();
+            FileNames = fileNames.ToArray();
         }
     }
 }

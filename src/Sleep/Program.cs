@@ -13,7 +13,7 @@
 
                 CommandLineParser commandLineParser = new CommandLineParser();
 
-                if (commandLineParser.IsSwitchSet("?", "h", "help"))
+                if (commandLineParser.IsOptionSet("?", "h", "help"))
                 {
                     Help();
                 }
@@ -66,7 +66,7 @@
 
                 Thread.Sleep(timeout);
 
-                if (commandLineParser.IsSwitchSet("showdelay"))
+                if (commandLineParser.IsOptionSet("showdelay"))
                 {
                     TimeSpan realTimeout = DateTime.Now - startTime;
                     Console.WriteLine("{0:N0} {1:00}:{2:00}:{3:00}.{4:000}", Math.Floor(realTimeout.TotalDays), realTimeout.Hours, realTimeout.Minutes, realTimeout.Seconds, realTimeout.Milliseconds);

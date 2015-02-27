@@ -22,11 +22,13 @@
                     break;
             }
 
+            var maxLineLength = _commandLineParser.GetOptionInt("l", "length", 76);
+
             var output = "";
 
             if (_commandLineParser.IsOptionSet("e", "encode"))
             {
-                output = Base64Converter.Encode(input);
+                output = Base64Converter.Encode(input, maxLineLength);
             }
             else if (_commandLineParser.IsOptionSet("d", "decode"))
             {
@@ -35,7 +37,7 @@
             else if (_commandLineParser.IsOptionSet("ef", "encodefile"))
             {
                 input = File.ReadAllText(input);
-                output = Base64Converter.Encode(input);
+                output = Base64Converter.Encode(input, maxLineLength);
             }
             else if (_commandLineParser.IsOptionSet("df", "decodefile"))
             {
@@ -49,7 +51,7 @@
 
             if (_commandLineParser.IsOptionSet("o", "output"))
             {
-                var outputFile = _commandLineParser.GetOptionString("o", "output");
+                var outputFile = _commandLineParser.GetOptionString("o", "output", null);
                 if (String.IsNullOrEmpty(outputFile))
                 {
                     Help();
@@ -69,7 +71,7 @@
         {
             Console.WriteLine("Base64 converter 1.0 | (c) Vurdalakov | https://github.com/vurdalakov/dostools\n");
             Console.WriteLine("Encodes and decodes base64 strings\n");
-            Console.WriteLine("Usage:\n\tbase64 <filename | text> <-e | -d | -ef | -df> [-output:filename] [-silent]\n");
+            Console.WriteLine("Usage:\n\tbase64 <filename | text> <-e | -d | -ef | -df> [-output:filename] [-length:0] [-silent]\n");
             Console.WriteLine("Exit codes:\n\t0 - conversion succeeded\n\t1 - conversion failed\n\t-1 - invalid command line syntax\n");
             
             base.Help();

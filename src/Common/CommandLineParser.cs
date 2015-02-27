@@ -53,7 +53,7 @@
 
         public Boolean OptionHasValue(String optionName)
         {
-            return IsOptionSet(optionName) && String.IsNullOrEmpty(_options[optionName]);
+            return IsOptionSet(optionName) && !String.IsNullOrEmpty(_options[optionName]);
         }
 
         public Boolean OptionHasValue(params String[] optionNames)
@@ -69,6 +69,11 @@
             return false;
         }
 
+        public String GetOptionString(String optionName)
+        {
+            return GetOptionString(optionName, null);
+        }
+
         public String GetOptionString(String optionName, String defaultValue)
         {
             return OptionHasValue(optionName) ? _options[optionName] : defaultValue;
@@ -76,22 +81,32 @@
 
         public String GetOptionString(params String[] optionNames)
         {
-            foreach (var optionName in optionNames)
+            var last = optionNames.Length - 1;
+            
+            var defaultValue = optionNames[last];
+            
+            for (var i = 0; i < last; i++)
             {
+                var optionName = optionNames[i];
                 if (OptionHasValue(optionName))
                 {
-                    return GetOptionString(optionName, null);
+                    return GetOptionString(optionName, defaultValue);
                 }
             }
 
-            return null;
+            return defaultValue;
+        }
+
+        public Int32 GetOptionInt(String optionName)
+        {
+            return GetOptionInt(optionName, -1);
         }
 
         public Int32 GetOptionInt(String optionName, Int32 defaultValue)
         {
             try
             {
-                return OptionHasValue(optionName) ? Convert.ToInt32(GetOptionString(optionName, null)) : defaultValue;
+                return OptionHasValue(optionName) ? Convert.ToInt32(GetOptionString(optionName)) : defaultValue;
             }
             catch
             {
@@ -99,17 +114,33 @@
             }
         }
 
-        public Int32 GetOptionInt(params String[] optionNames)
+        public Int32 GetOptionInt(params Object[] parameters)
         {
-            foreach (var optionName in optionNames)
+            if (parameters.Length < 3)
             {
+                throw new ArgumentException("Function takes 3 or more parameters");
+            }
+
+            var last = parameters.Length - 1;
+
+            var defaultValue = (Int32)parameters[last];
+
+            for (var i = 0; i < last; i++)
+            {
+                var optionName = parameters[i] as String;
+
+                if (String.IsNullOrEmpty(optionName))
+                {
+                    throw new ArgumentException(String.Format("Parameter {0} must be a string", i));
+                }
+
                 if (OptionHasValue(optionName))
                 {
-                    return GetOptionInt(optionName, 0);
+                    return GetOptionInt(optionName, defaultValue);
                 }
             }
 
-            return 0;
+            return defaultValue;
         }
 
         private void ParseArguments(Char[] prefixes, Char[] valueSeparators)

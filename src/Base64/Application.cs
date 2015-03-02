@@ -12,7 +12,14 @@
             switch (_commandLineParser.FileNames.Length)
             {
                 case 0:
-                    input = Console.ReadLine();
+                    if (_commandLineParser.IsOptionSet("e", "encode", "d", "decode", "ef", "encodefile", "df", "decodefile"))
+                    {
+                        input += Console.In.ReadToEnd().TrimEnd(Environment.NewLine.ToCharArray());
+                    }
+                    else
+                    {
+                        Help();
+                    }
                     break;
                 case 1:
                     input = _commandLineParser.FileNames[0];

@@ -76,7 +76,7 @@
 
         protected override void Help()
         {
-            Console.WriteLine("Base64 converter 1.0 | https://github.com/vurdalakov/dostools\n");
+            Console.WriteLine("Base64 converter {0} | https://github.com/vurdalakov/dostools\n", ApplicationVersion);
             Console.WriteLine("Encodes and decodes base64 strings.\n");
             Console.WriteLine("Usage:\n\tbase64 <filename | text> <-command> [-o:filename] [-l:0] [-silent]\n");
             Console.WriteLine("Commands:\n\t-e - encode text\n\t-d - decode text\n\t-ef - encode file\n\t-df - decode file\n");

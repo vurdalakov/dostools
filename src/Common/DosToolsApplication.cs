@@ -1,10 +1,20 @@
 ﻿namespace Vurdalakov
 {
     using System;
+    using System.Reflection;
 
     public abstract class DosToolsApplication
     {
         protected CommandLineParser _commandLineParser;
+
+        public String ApplicationVersion
+        {
+            get
+            {
+                var parts = Assembly.GetExecutingAssembly().FullName.Split(',');
+                return parts[1].Split('=')[1];
+            }
+        }
 
         public DosToolsApplication()
         {

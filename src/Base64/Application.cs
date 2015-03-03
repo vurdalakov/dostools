@@ -76,9 +76,11 @@
 
         protected override void Help()
         {
-            Console.WriteLine("Base64 converter 1.0 | (c) Vurdalakov | https://github.com/vurdalakov/dostools\n");
-            Console.WriteLine("Encodes and decodes base64 strings\n");
-            Console.WriteLine("Usage:\n\tbase64 <filename | text> <-e | -d | -ef | -df> [-output:filename] [-length:0] [-silent]\n");
+            Console.WriteLine("Base64 converter 1.0 | https://github.com/vurdalakov/dostools\n");
+            Console.WriteLine("Encodes and decodes base64 strings.\n");
+            Console.WriteLine("Usage:\n\tbase64 <filename | text> <-command> [-o:filename] [-l:0] [-silent]\n");
+            Console.WriteLine("Commands:\n\t-e - encode text\n\t-d - decode text\n\t-ef - encode file\n\t-df - decode file\n");
+            Console.WriteLine("Options:\n\t-o - write output to given file\n\t-l - max base64 line length (default is 76)\n\t-silent - no error messsages are shown; check exit code\n");
             Console.WriteLine("Exit codes:\n\t0 - conversion succeeded\n\t1 - conversion failed\n\t-1 - invalid command line syntax\n");
             
             base.Help();

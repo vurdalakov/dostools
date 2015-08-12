@@ -55,7 +55,7 @@
             {
                 var name = GetName("nf");
                 var atom = AtomTable.NtFind(name);
-                Console.WriteLine("{0}={1}", name, atom);
+                Console.WriteLine("{0}={1}", name, 0 == atom ? "<Not found>" : atom.ToString());
             }
             else if (_commandLineParser.IsOptionSet("nq"))
             {
@@ -89,6 +89,21 @@
                 var name = GetName("ua");
                 var atom = AtomTable.UserAdd(name);
                 Console.WriteLine("{0}={1}", name, atom);
+            }
+            else if (_commandLineParser.IsOptionSet("uf"))
+            {
+                var name = GetName("uf");
+                var atom = 0;
+                for (var atom1 = 0xC000; atom1 <= 0xFFFF; atom1++)
+                {
+                    var name1 = AtomTable.UserGetName((UInt16)atom1);
+                    if ((name1 != null) && name.Equals(name1, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        atom = atom1;
+                        break;
+                    }
+                }
+                Console.WriteLine("{0}={1}", name, 0 == atom ? "<Not found>" : atom.ToString());
             }
             else if (_commandLineParser.IsOptionSet("uq"))
             {

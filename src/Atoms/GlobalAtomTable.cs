@@ -36,19 +36,19 @@
             return failure ? null : name.ToString();
         }
 
-        public static UInt16 Add(String name)
+        public static UInt16 NtAdd(String name)
         {
             UInt16 atom = 0;
             ThrowIfFailed(NtAddAtom(name, (UInt32)name.Length * 2, ref atom), "NtAddAtom");
             return atom;
         }
 
-        public static void Delete(UInt16 atom)
+        public static void NtDelete(UInt16 atom)
         {
             ThrowIfFailed(NtDeleteAtom(atom), "NtDeleteAtom");
         }
 
-        public static UInt16 Find(String name)
+        public static UInt16 NtFind(String name)
         {
             UInt16 atom = 0;
             var ntstatus = NtFindAtom(name, (UInt32)name.Length * 2, ref atom);
@@ -76,7 +76,7 @@
             }
         }
 
-        public static AtomBasicInformation QueryBasicInformation(UInt16 atom)
+        public static AtomBasicInformation NtQueryBasicInformation(UInt16 atom)
         {
             var atomBasicInformation = new ATOM_BASIC_INFORMATION();
 

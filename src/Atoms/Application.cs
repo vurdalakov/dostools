@@ -40,27 +40,27 @@
                     }
                 }
             }
-            else if (_commandLineParser.IsOptionSet("a"))
+            else if (_commandLineParser.IsOptionSet("na"))
             {
-                var name = GetName("a");
-                var atom = GlobalAtomTable.Add(name);
+                var name = GetName("na");
+                var atom = GlobalAtomTable.NtAdd(name);
                 Console.WriteLine("{0}={1}", name, atom);
             }
-            else if (_commandLineParser.IsOptionSet("d"))
+            else if (_commandLineParser.IsOptionSet("nd"))
             {
-                var atom = GetAtom("d");
-                GlobalAtomTable.Delete(atom);
+                var atom = GetAtom("nd");
+                GlobalAtomTable.NtDelete(atom);
             }
-            else if (_commandLineParser.IsOptionSet("f"))
+            else if (_commandLineParser.IsOptionSet("nf"))
             {
-                var name = GetName("f");
-                var atom = GlobalAtomTable.Find(name);
+                var name = GetName("nf");
+                var atom = GlobalAtomTable.NtFind(name);
                 Console.WriteLine("{0}={1}", name, atom);
             }
-            else if (_commandLineParser.IsOptionSet("q"))
+            else if (_commandLineParser.IsOptionSet("nq"))
             {
-                var atom = GetAtom("q");
-                var atomBasicInformation = GlobalAtomTable.QueryBasicInformation(atom);
+                var atom = GetAtom("nq");
+                var atomBasicInformation = GlobalAtomTable.NtQueryBasicInformation(atom);
                 if (null == atomBasicInformation)
                 {
                     Console.WriteLine("<Not found>");
@@ -73,7 +73,7 @@
                     Console.WriteLine("Name={0}", atomBasicInformation.Name);
                 }
             }
-            else if (_commandLineParser.IsOptionSet("e"))
+            else if (_commandLineParser.IsOptionSet("ne"))
             {
                 for (var atom = 0xC000; atom <= 0xFFFF; atom++)
                 {
@@ -82,7 +82,7 @@
                     //{
                     //    Console.WriteLine("{0}\t0x{0:X4}\t{1}", i, name);
                     //}
-                    var info = GlobalAtomTable.QueryBasicInformation((UInt16)atom);
+                    var info = GlobalAtomTable.NtQueryBasicInformation((UInt16)atom);
                     if (info != null)
                     {
                         Console.WriteLine("{0}\t0x{0:X4}\t{1}", atom, info.Name);

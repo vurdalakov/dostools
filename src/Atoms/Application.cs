@@ -63,6 +63,7 @@
                     Help();
                 }
 
+                Console.WriteLine("Atom={0}", atom);
                 var atomBasicInformation = GlobalAtomTable.QueryBasicInformation((UInt16)atom);
                 Console.WriteLine("ReferenceCount={0}", atomBasicInformation.ReferenceCount);
                 Console.WriteLine("Pinned={0}", atomBasicInformation.Pinned);

@@ -16,14 +16,14 @@
         static public UInt16 Add(String name)
         {
             UInt16 atom = 0;
-            ThrowIfFailed(NtAddAtom(name, (UInt32)name.Length, ref atom), "NtAddAtom");
+            ThrowIfFailed(NtAddAtom(name, (UInt32)name.Length * 2, ref atom), "NtAddAtom");
             return atom;
         }
 
         static public UInt16 Find(String name)
         {
             UInt16 atom = 0;
-            ThrowIfFailed(NtFindAtom(name, (UInt32)name.Length, ref atom), "NtFindAtom");
+            ThrowIfFailed(NtFindAtom(name, (UInt32)name.Length * 2, ref atom), "NtFindAtom");
             return atom;
         }
 

@@ -10,7 +10,7 @@ It is distributed under the [MIT license](http://opensource.org/licenses/MIT).
 
 Name | Description | Links
 ---- | ----------- | ----------------
-`atoms` | Works with Windows global atom table. | [Details](https://github.com/vurdalakov/dostools/wiki/atoms)
+`atoms` | Works with Windows global and user atom tables. | [Details](https://github.com/vurdalakov/dostools/wiki/atoms)
 `bencode2json` | Converts a bencode file to a JSON file. | [Details](https://github.com/vurdalakov/bencode2json)
 `clip` | Works with Windows Clipboard | [Details](https://github.com/vurdalakov/dostools/wiki/clip)
 `clp` | Saves, restores and parses Windows Clipboard files (.CLP) | [Details](https://github.com/vurdalakov/dostools/wiki/clp)

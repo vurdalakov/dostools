@@ -153,9 +153,13 @@
         protected override void Help()
         {
             Console.WriteLine("Atoms {0} | https://github.com/vurdalakov/dostools\n", ApplicationVersion);
-            Console.WriteLine("Works with Windows global atom table.\n");
-            Console.WriteLine("Usage:\n\tatoms <-command> [-silent]\n");
-            Console.WriteLine("Commands:\n\t-e - enumerates all strings\n\t-a:string - adds string\n\t-f:string - finds string\n\t-d:atom - deletes atom\n\t-q:atom - queries basic information about atom\n");
+            Console.WriteLine("Works with Windows global and user atom tables.\n");
+            Console.WriteLine("Usage:\n\tatoms <-command[:parameter]> [-silent]\n");
+            Console.WriteLine("Commands:");
+            Console.WriteLine("\tGlobal atom table:  -ga:string, -gd:atom, -gf:string, -gq:atom, -ge");
+            Console.WriteLine("\tSame through NTDLL: -na:string, -nd:atom, -nf:string, -nq:atom, -ne");
+            Console.WriteLine("\tUser atom table:    -ua:string,           -uf:string, -uq:atom, -ue\n");
+            Console.WriteLine("\tSecond letter in command: a=Add, d=Delete, f=Find, q=Query, e=Enumerate\n");
             Console.WriteLine("Options:\n\t-silent - no error messsages are shown; check exit code\n");
             Console.WriteLine("Exit codes:\n\t0 - command succeeded\n\t1 - command failed\n\t-1 - invalid command line syntax\n");
 

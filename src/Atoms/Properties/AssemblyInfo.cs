@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("atoms")]
-[assembly: AssemblyDescription("Works with Windows global atom table")]
+[assembly: AssemblyDescription("Works with Windows global and user atom tables")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Vurdalakov")]
 [assembly: AssemblyProduct("DosTools")]

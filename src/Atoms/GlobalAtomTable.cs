@@ -7,32 +7,76 @@
 
     public static class GlobalAtomTable
     {
-        static public String GetRegisteredFormatName(UInt16 format)
+        public static UInt16 GlobalAdd(String name)
         {
-            var stringBuilder = new StringBuilder(256);
-            return GetClipboardFormatName(format, stringBuilder, stringBuilder.Capacity) > 0 ? stringBuilder.ToString() : null;
+            var atom = GlobalAddAtom(name);
+            ThrowIfFailed(0 == atom, "GlobalAddAtom");
+            return atom;
         }
 
-        static public UInt16 Add(String name)
+        public static void GlobalDelete(UInt16 atom)
+        {
+            SetLastError(0);
+            GlobalDeleteAtom(atom);
+            ThrowIfFailed(Marshal.GetLastWin32Error() != 0, "GlobalDeleteAtom");
+        }
+
+        public static UInt16 GlobalFind(String name)
+        {
+            var atom = GlobalFindAtom(name);
+            ThrowIfFailed((0 == atom) && (Marshal.GetLastWin32Error() != 2), "GlobalFindAtom");
+            return atom;
+        }
+
+        public static String GlobalGetName(UInt16 atom)
+        {
+            var name = new StringBuilder(514);
+            var failure = 0 == GlobalGetAtomName(atom, name, name.Capacity);
+            ThrowIfFailed(failure && (Marshal.GetLastWin32Error() != 6), "GlobalGetAtomName");
+            return failure ? null : name.ToString();
+        }
+
+        public static UInt16 Add(String name)
         {
             UInt16 atom = 0;
             ThrowIfFailed(NtAddAtom(name, (UInt32)name.Length * 2, ref atom), "NtAddAtom");
             return atom;
         }
 
-        static public UInt16 Find(String name)
-        {
-            UInt16 atom = 0;
-            ThrowIfFailed(NtFindAtom(name, (UInt32)name.Length * 2, ref atom), "NtFindAtom");
-            return atom;
-        }
-
-        static public void Delete(UInt16 atom)
+        public static void Delete(UInt16 atom)
         {
             ThrowIfFailed(NtDeleteAtom(atom), "NtDeleteAtom");
         }
 
-        static public ATOM_BASIC_INFORMATION QueryBasicInformation(UInt16 atom)
+        public static UInt16 Find(String name)
+        {
+            UInt16 atom = 0;
+            var ntstatus = NtFindAtom(name, (UInt32)name.Length * 2, ref atom);
+            if (0xC0000034 == ntstatus)
+            {
+                return 0;
+            }
+            ThrowIfFailed(ntstatus, "NtFindAtom");
+            return atom;
+        }
+
+        public class AtomBasicInformation
+        {
+            public UInt16 Atom { get; private set; }
+            public UInt16 ReferenceCount { get; private set; }
+            public UInt16 Pinned { get; private set; }
+            public String Name { get; private set; }
+
+            public AtomBasicInformation(UInt16 atom, UInt16 referenceCount, UInt16 pinned, String name)
+            {
+                Atom = atom;
+                ReferenceCount = referenceCount;
+                Pinned = pinned;
+                Name = name;
+            }
+        }
+
+        public static AtomBasicInformation QueryBasicInformation(UInt16 atom)
         {
             var atomBasicInformation = new ATOM_BASIC_INFORMATION();
 
@@ -42,7 +86,12 @@
             Marshal.StructureToPtr(atomBasicInformation, ptr, false);
 
             UInt32 returnLength = 0;
-            ThrowIfFailed(NtQueryInformationAtom(atom, 0, ptr, (UInt32)size, ref returnLength), "NtQueryInformationAtom");
+            var ntstatus = NtQueryInformationAtom(atom, 0, ptr, (UInt32)size, ref returnLength);
+            if (0xC0000008 == ntstatus)
+            {
+                return null;
+            }
+            ThrowIfFailed(ntstatus, "NtQueryInformationAtom");
 
             atomBasicInformation = (ATOM_BASIC_INFORMATION)Marshal.PtrToStructure(ptr, typeof(ATOM_BASIC_INFORMATION));
 
@@ -51,17 +100,35 @@
 
             Marshal.FreeHGlobal(ptr);
 
-            return atomBasicInformation;
+            return new AtomBasicInformation(atom, atomBasicInformation.ReferenceCount, atomBasicInformation.Pinned, atomBasicInformation.Name);
+        }
+
+        public static String GetRegisteredFormatName(UInt16 format)
+        {
+            var stringBuilder = new StringBuilder(256);
+            return GetClipboardFormatName(format, stringBuilder, stringBuilder.Capacity) > 0 ? stringBuilder.ToString() : null;
+        }
+
+        private static void ThrowIfFailed(Boolean failed, String functionName)
+        {
+            if (failed)
+            {
+                Throw(Marshal.GetLastWin32Error(), functionName);
+            }
         }
 
         private static void ThrowIfFailed(UInt32 ntstatus, String functionName)
         {
             if (ntstatus != 0)
             {
-                var message = String.Format("Function {0}() failed with error {1} (0x{1:X8}).", functionName, ntstatus);
-
-                throw new Win32Exception((Int32)ntstatus, message);
+                Throw((Int32)ntstatus, functionName);
             }
+        }
+
+        private static void Throw(Int32 error, String functionName)
+        {
+            var message = String.Format("Function {0}() failed with error {1} (0x{1:X8}).", functionName, error);
+            throw new Win32Exception(error, message);
         }
 
         //private Int32 NtStatus2Win32Error(UInt32 ntstatus)
@@ -83,23 +150,32 @@
         //        return result;
         //}
 
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern Int32 GetClipboardFormatName(UInt32 format, StringBuilder lpszFormatName, Int32 cchMaxCount);
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern UInt16 GlobalAddAtom(String lpString);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern UInt16 GlobalDeleteAtom(UInt16 nAtom);
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern UInt16 GlobalFindAtom(String lpString);
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern UInt32 GlobalGetAtomName(UInt16 nAtom, StringBuilder lpBuffer, int nSize);
 
         [DllImport("ntdll.dll", CharSet = CharSet.Unicode)]
         private static extern UInt32 NtAddAtom(String name, UInt32 length, ref UInt16 atom);
+
+        [DllImport("ntdll.dll")]
+        private static extern UInt32 NtDeleteAtom(UInt16 atom);
 
         [DllImport("ntdll.dll", CharSet = CharSet.Unicode)]
         private static extern UInt32 NtFindAtom(String name, UInt32 length, ref UInt16 atom);
 
         [DllImport("ntdll.dll")]
-        private static extern UInt32 NtDeleteAtom(UInt16 atom);
-
-        [DllImport("ntdll.dll")]
         private static extern UInt32 NtQueryInformationAtom(UInt16 atom, Int32 atomInformationClass, IntPtr atomInformation, UInt32 atomInformationLength, ref UInt32 returnLength);
 
         [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Auto)]
-        public struct ATOM_BASIC_INFORMATION
+        private struct ATOM_BASIC_INFORMATION
         {
             public UInt16 ReferenceCount;
             public UInt16 Pinned;
@@ -107,5 +183,11 @@
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
             public String Name;
         }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern Int32 GetClipboardFormatName(UInt32 format, StringBuilder lpszFormatName, Int32 cchMaxCount);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern void SetLastError(UInt32 dwErrCode);
     }
 }

@@ -103,7 +103,16 @@
             return new AtomBasicInformation(atom, atomBasicInformation.ReferenceCount, atomBasicInformation.Pinned, atomBasicInformation.Name);
         }
 
-        public static String GetRegisteredFormatName(UInt16 format)
+        public static UInt16 UserAdd(String name)
+        {
+            //return UserAddAtom(name, false); // crashes
+
+            var atom = RegisterClipboardFormat(name);
+            ThrowIfFailed(0 == atom, "RegisterClipboardFormat");
+            return (UInt16)atom;
+        }
+
+        public static String UserGetName(UInt16 format)
         {
             var stringBuilder = new StringBuilder(256);
             return GetClipboardFormatName(format, stringBuilder, stringBuilder.Capacity) > 0 ? stringBuilder.ToString() : null;
@@ -183,6 +192,12 @@
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
             public String Name;
         }
+
+        [DllImport("win32kbase.sys", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern UInt16 UserAddAtom(String name, Boolean pin);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern Int32 RegisterClipboardFormat(String lpszFormat);
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern Int32 GetClipboardFormatName(UInt32 format, StringBuilder lpszFormatName, Int32 cchMaxCount);

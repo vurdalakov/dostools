@@ -77,15 +77,27 @@
             {
                 for (var atom = 0xC000; atom <= 0xFFFF; atom++)
                 {
-                    //var name = GlobalAtomTable.GetRegisteredFormatName((UInt16)i);
-                    //if (name != null)
-                    //{
-                    //    Console.WriteLine("{0}\t0x{0:X4}\t{1}", i, name);
-                    //}
                     var info = GlobalAtomTable.NtQueryBasicInformation((UInt16)atom);
                     if (info != null)
                     {
                         Console.WriteLine("{0}\t0x{0:X4}\t{1}", atom, info.Name);
+                    }
+                }
+            }
+            else if (_commandLineParser.IsOptionSet("ua"))
+            {
+                var name = GetName("ua");
+                var atom = GlobalAtomTable.UserAdd(name);
+                Console.WriteLine("{0}={1}", name, atom);
+            }
+            else if (_commandLineParser.IsOptionSet("ue"))
+            {
+                for (var atom = 0xC000; atom <= 0xFFFF; atom++)
+                {
+                    var name = GlobalAtomTable.UserGetName((UInt16)atom);
+                    if (name != null)
+                    {
+                        Console.WriteLine("{0}\t0x{0:X4}\t{1}", atom, name);
                     }
                 }
             }

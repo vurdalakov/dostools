@@ -9,31 +9,31 @@
             if (_commandLineParser.IsOptionSet("ga"))
             {
                 var name = GetName("ga");
-                var atom = GlobalAtomTable.GlobalAdd(name);
+                var atom = AtomTable.GlobalAdd(name);
                 Console.WriteLine("{0}={1}", name, atom);
             }
             else if (_commandLineParser.IsOptionSet("gd"))
             {
                 var atom = GetAtom("gd");
-                GlobalAtomTable.GlobalDelete(atom);
+                AtomTable.GlobalDelete(atom);
             }
             else if (_commandLineParser.IsOptionSet("gf"))
             {
                 var name = GetName("gf");
-                var atom = GlobalAtomTable.GlobalFind(name);
+                var atom = AtomTable.GlobalFind(name);
                 Console.WriteLine("{0}={1}", name, 0 == atom ? "<Not found>" : atom.ToString());
             }
             else if (_commandLineParser.IsOptionSet("gq"))
             {
                 var atom = GetAtom("gq");
-                var name = GlobalAtomTable.GlobalGetName(atom);
+                var name = AtomTable.GlobalGetName(atom);
                 Console.WriteLine("{0}={1}", atom, null == name ? "<Not found>" : name);
             }
             else if (_commandLineParser.IsOptionSet("ge"))
             {
                 for (var atom = 0xC000; atom <= 0xFFFF; atom++)
                 {
-                    var name = GlobalAtomTable.GlobalGetName((UInt16)atom);
+                    var name = AtomTable.GlobalGetName((UInt16)atom);
                     if (name != null)
                     {
                         Console.WriteLine("{0}\t0x{0:X4}\t{1}", atom, name);
@@ -43,24 +43,24 @@
             else if (_commandLineParser.IsOptionSet("na"))
             {
                 var name = GetName("na");
-                var atom = GlobalAtomTable.NtAdd(name);
+                var atom = AtomTable.NtAdd(name);
                 Console.WriteLine("{0}={1}", name, atom);
             }
             else if (_commandLineParser.IsOptionSet("nd"))
             {
                 var atom = GetAtom("nd");
-                GlobalAtomTable.NtDelete(atom);
+                AtomTable.NtDelete(atom);
             }
             else if (_commandLineParser.IsOptionSet("nf"))
             {
                 var name = GetName("nf");
-                var atom = GlobalAtomTable.NtFind(name);
+                var atom = AtomTable.NtFind(name);
                 Console.WriteLine("{0}={1}", name, atom);
             }
             else if (_commandLineParser.IsOptionSet("nq"))
             {
                 var atom = GetAtom("nq");
-                var atomBasicInformation = GlobalAtomTable.NtQueryBasicInformation(atom);
+                var atomBasicInformation = AtomTable.NtQueryBasicInformation(atom);
                 if (null == atomBasicInformation)
                 {
                     Console.WriteLine("<Not found>");
@@ -77,7 +77,7 @@
             {
                 for (var atom = 0xC000; atom <= 0xFFFF; atom++)
                 {
-                    var info = GlobalAtomTable.NtQueryBasicInformation((UInt16)atom);
+                    var info = AtomTable.NtQueryBasicInformation((UInt16)atom);
                     if (info != null)
                     {
                         Console.WriteLine("{0}\t0x{0:X4}\t{1}", atom, info.Name);
@@ -87,14 +87,20 @@
             else if (_commandLineParser.IsOptionSet("ua"))
             {
                 var name = GetName("ua");
-                var atom = GlobalAtomTable.UserAdd(name);
+                var atom = AtomTable.UserAdd(name);
                 Console.WriteLine("{0}={1}", name, atom);
+            }
+            else if (_commandLineParser.IsOptionSet("uq"))
+            {
+                var atom = GetAtom("uq");
+                var name = AtomTable.UserGetName(atom);
+                Console.WriteLine("{0}={1}", atom, null == name ? "<Not found>" : name);
             }
             else if (_commandLineParser.IsOptionSet("ue"))
             {
                 for (var atom = 0xC000; atom <= 0xFFFF; atom++)
                 {
-                    var name = GlobalAtomTable.UserGetName((UInt16)atom);
+                    var name = AtomTable.UserGetName((UInt16)atom);
                     if (name != null)
                     {
                         Console.WriteLine("{0}\t0x{0:X4}\t{1}", atom, name);

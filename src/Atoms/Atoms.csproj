@@ -48,7 +48,7 @@
       <Link>Common\DosToolsApplication.cs</Link>
     </Compile>
     <Compile Include="Application.cs" />
-    <Compile Include="GlobalAtomTable.cs" />
+    <Compile Include="AtomTable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

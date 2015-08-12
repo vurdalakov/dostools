@@ -5,7 +5,7 @@
     using System.Runtime.InteropServices;
     using System.Text;
 
-    public static class GlobalAtomTable
+    public static class AtomTable
     {
         public static UInt16 GlobalAdd(String name)
         {
@@ -105,8 +105,6 @@
 
         public static UInt16 UserAdd(String name)
         {
-            //return UserAddAtom(name, false); // crashes
-
             var atom = RegisterClipboardFormat(name);
             ThrowIfFailed(0 == atom, "RegisterClipboardFormat");
             return (UInt16)atom;
@@ -193,8 +191,11 @@
             public String Name;
         }
 
-        [DllImport("win32kbase.sys", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("win32kbase.sys", CharSet = CharSet.Unicode)]
         private static extern UInt16 UserAddAtom(String name, Boolean pin);
+
+        [DllImport("win32kbase.sys")]
+        private static extern UInt16 UserDeleteAtom(UInt16 nAtom);
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern Int32 RegisterClipboardFormat(String lpszFormat);

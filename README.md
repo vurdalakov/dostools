@@ -1,10 +1,10 @@
-﻿# dostools
+﻿# DosTools
 
 #### Overview
 
-`dostools` is a collection of command-line utilities written in C#.
+`DosTools` is a collection of command-line utilities written in C#.
 
-It is distributed under the [MIT license](http://opensource.org/licenses/MIT).
+All tools are distributed under the [MIT license](http://opensource.org/licenses/MIT).
 
 #### List of tools
 
@@ -16,6 +16,7 @@ Name | Description | Links
 `clp` | Saves, restores and parses Windows Clipboard files (.CLP) | [Details](https://github.com/vurdalakov/dostools/wiki/clp)
 `crc32` | Calculates CRC32 file hashes. | [Details](https://code.google.com/p/crc32/)  [Download](https://code.google.com/p/crc32/downloads/list)
 `datetime` | Prints date and/or time in specified format. | [Details](https://github.com/vurdalakov/dostools/wiki/datetime)
+`gifdump` | Dumps GIF file structure. | [Details](https://github.com/vurdalakov/abandoned/wiki/GifDump)
 `randomfile` | Generates a file with given length and random content. | [Details](https://code.google.com/p/randomfile/)  [Download](https://code.google.com/p/randomfile/downloads/list)
 `rawcmp` | Compares raw content of two files, ignoring metadata and other insignificant data. | [Details](https://github.com/vurdalakov/rawcmp)
 `sleep` | Delays for a specified amount of time. Supports floating point numbers. | [Details](https://github.com/vurdalakov/dostools/wiki/sleep)

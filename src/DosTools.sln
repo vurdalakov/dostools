@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DateTime", "DateTime\DateTime.csproj", "{F3D2DF4C-180D-455B-8912-70940099B208}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base64", "Base64\Base64.csproj", "{23B4EF8D-A24D-4CAB-99DF-D2C0B8360CC6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atoms", "Atoms\Atoms.csproj", "{538C856F-1ACF-4F74-9D9D-93CA2AA7C43C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FReplace", "FReplace\FReplace.csproj", "{B1C8B43C-CACD-4794-B5D3-C50CB3BF5886}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{538C856F-1ACF-4F74-9D9D-93CA2AA7C43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{538C856F-1ACF-4F74-9D9D-93CA2AA7C43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{538C856F-1ACF-4F74-9D9D-93CA2AA7C43C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1C8B43C-CACD-4794-B5D3-C50CB3BF5886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1C8B43C-CACD-4794-B5D3-C50CB3BF5886}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1C8B43C-CACD-4794-B5D3-C50CB3BF5886}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1C8B43C-CACD-4794-B5D3-C50CB3BF5886}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

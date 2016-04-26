@@ -65,5 +65,11 @@
                 Console.WriteLine(String.Format(format, args));
             }
         }
+
+        protected void Error(Int32 errorCode, String format, params Object[] args)
+        {
+            Print(format, args);
+            Environment.Exit(errorCode);
+        }
     }
 }

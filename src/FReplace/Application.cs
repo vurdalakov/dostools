@@ -43,7 +43,7 @@
             Console.WriteLine("FReplace {0} | https://github.com/vurdalakov/dostools\n", ApplicationVersion);
             Console.WriteLine("Replaces text in text file.\n");
             Console.WriteLine("Usage:\n\tfreplace <file name> <text to replace> <text to replace with> [-silent]\n");
-            Console.WriteLine("Options:\n\t-silent - no error messsages are shown; check exit code\n");
+            Console.WriteLine("Options:\n\t-silent - no error messages are shown; check exit code\n");
             Console.WriteLine("Exit codes:\n\t0 - replace succeeded\n\t2 - file not found\n\t3 - directory not found\n\t5 - access denied\n\t-1 - invalid command line syntax\n");
 
             base.Help();

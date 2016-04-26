@@ -160,7 +160,7 @@
             Console.WriteLine("\tSame through NTDLL: -na:string, -nd:atom, -nf:string, -nq:atom, -ne");
             Console.WriteLine("\tUser atom table:    -ua:string,           -uf:string, -uq:atom, -ue\n");
             Console.WriteLine("\tSecond letter in command: a=Add, d=Delete, f=Find, q=Query, e=Enumerate\n");
-            Console.WriteLine("Options:\n\t-silent - no error messsages are shown; check exit code\n");
+            Console.WriteLine("Options:\n\t-silent - no error messages are shown; check exit code\n");
             Console.WriteLine("Exit codes:\n\t0 - command succeeded\n\t1 - command failed\n\t-1 - invalid command line syntax\n");
 
             base.Help();

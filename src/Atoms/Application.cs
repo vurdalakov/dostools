@@ -122,6 +122,79 @@
                     }
                 }
             }
+            if (_commandLineParser.IsOptionSet("la"))
+            {
+                var name = GetName("la");
+                var atom = AtomTable.LocalAdd(name);
+                Console.WriteLine("{0}={1}", name, atom);
+            }
+            else if (_commandLineParser.IsOptionSet("ld"))
+            {
+                var atom = GetAtom("ld");
+                AtomTable.LocalDelete(atom);
+            }
+            else if (_commandLineParser.IsOptionSet("lf"))
+            {
+                var name = GetName("lf");
+                var atom = AtomTable.LocalFind(name);
+                Console.WriteLine("{0}={1}", name, 0 == atom ? "<Not found>" : atom.ToString());
+            }
+            else if (_commandLineParser.IsOptionSet("lq"))
+            {
+                var atom = GetAtom("lq");
+                var name = AtomTable.LocalGetName(atom);
+                Console.WriteLine("{0}={1}", atom, null == name ? "<Not found>" : name);
+            }
+            else if (_commandLineParser.IsOptionSet("le"))
+            {
+                for (var atom = 0xC000; atom <= 0xFFFF; atom++)
+                {
+                    var name = AtomTable.LocalGetName((UInt16)atom);
+                    if (name != null)
+                    {
+                        Console.WriteLine("{0}\t0x{0:X4}\t{1}", atom, name);
+                    }
+                }
+            }
+            //else if (_commandLineParser.IsOptionSet("lt"))
+            //{
+            //    // TEST
+
+            //    // ADD
+            //    var atom = AtomTable.LocalAdd("TEST");
+            //    Console.WriteLine("{0}={1}", "TEST", atom);
+
+            //    // FIND
+            //    atom = AtomTable.LocalFind("TEST");
+            //    Console.WriteLine("{0}={1}", "TEST", 0 == atom ? "<Not found>" : atom.ToString());
+
+            //    // QUERY
+            //    var name = AtomTable.LocalGetName(atom);
+            //    Console.WriteLine("{0}={1}", atom, null == name ? "<Not found>" : name);
+
+            //    // ENUMRATE
+            //    for (var _atom = 0xC000; _atom <= 0xFFFF; _atom++)
+            //    {
+            //        var _name = AtomTable.LocalGetName((UInt16)_atom);
+            //        if (_name != null)
+            //        {
+            //            Console.WriteLine("{0}\t0x{0:X4}\t{1}", _atom, _name);
+            //        }
+            //    }
+
+            //    // DELETE
+            //    AtomTable.LocalDelete(atom);
+
+            //    // ENUMRATE(part 2)
+            //    for (var _atom = 0xC000; _atom <= 0xFFFF; _atom++)
+            //    {
+            //        var _name = AtomTable.LocalGetName((UInt16)_atom);
+            //        if (_name != null)
+            //        {
+            //            Console.WriteLine("{0}\t0x{0:X4}\t{1}", _atom, _name);
+            //        }
+            //    }
+            //}
             else
             {
                 Help();
@@ -158,7 +231,8 @@
             Console.WriteLine("Commands:");
             Console.WriteLine("\tGlobal atom table:  -ga:string, -gd:atom, -gf:string, -gq:atom, -ge");
             Console.WriteLine("\tSame through NTDLL: -na:string, -nd:atom, -nf:string, -nq:atom, -ne");
-            Console.WriteLine("\tUser atom table:    -ua:string,           -uf:string, -uq:atom, -ue\n");
+            Console.WriteLine("\tUser atom table:    -ua:string,           -uf:string, -uq:atom, -ue");
+            Console.WriteLine("\tLocal atom table:   -la:string, -ld:atom, -lf:string, -lq:atom, -le\n");
             Console.WriteLine("\tSecond letter in command: a=Add, d=Delete, f=Find, q=Query, e=Enumerate\n");
             Console.WriteLine("Options:\n\t-silent - no error messages are shown; check exit code\n");
             Console.WriteLine("Exit codes:\n\t0 - command succeeded\n\t1 - command failed\n\t-1 - invalid command line syntax\n");

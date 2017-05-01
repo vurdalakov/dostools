@@ -116,6 +116,31 @@
             return GetClipboardFormatName(format, stringBuilder, stringBuilder.Capacity) > 0 ? stringBuilder.ToString() : null;
         }
 
+        public static UInt16 LocalAdd(String name)
+        {
+            var atom = AddAtom(name);
+            ThrowIfFailed(0 == atom, "AddAtom");
+            return (UInt16)atom;
+        }
+
+        public static void LocalDelete(UInt16 atom)
+        {
+            ThrowIfFailed(0 != DeleteAtom(atom), "DeleteAtom");
+        }
+
+        public static UInt16 LocalFind(String name)
+        {
+            var atom = FindAtom(name);
+            ThrowIfFailed((0 == atom) && (Marshal.GetLastWin32Error() != 2), "FindAtom");
+            return atom;
+        }
+
+        public static String LocalGetName(UInt16 format)
+        {
+            var stringBuilder = new StringBuilder(256);
+            return GetAtomName(format, stringBuilder, stringBuilder.Capacity) > 0 ? stringBuilder.ToString() : null;
+        }
+
         private static void ThrowIfFailed(Boolean failed, String functionName)
         {
             if (failed)
@@ -202,6 +227,18 @@
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern Int32 GetClipboardFormatName(UInt32 format, StringBuilder lpszFormatName, Int32 cchMaxCount);
+
+        [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern UInt16 AddAtom(String lpString);
+
+        [DllImport("Kernel32.dll", SetLastError = true)]
+        private static extern UInt16 DeleteAtom(UInt16 nAtom);
+
+        [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern UInt16 FindAtom(String lpString);
+
+        [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern UInt16 GetAtomName(UInt16 nAtom, StringBuilder lpBuffer, Int32 nSize);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern void SetLastError(UInt32 dwErrCode);

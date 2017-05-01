@@ -80,7 +80,7 @@
                     var info = AtomTable.NtQueryBasicInformation((UInt16)atom);
                     if (info != null)
                     {
-                        Console.WriteLine("{0}\t0x{0:X4}\t{1}", atom, info.Name);
+                        Console.WriteLine("{0}\t0x{0:X4}\t{1}\t{2}", atom, info.ReferenceCount, info.Name);
                     }
                 }
             }

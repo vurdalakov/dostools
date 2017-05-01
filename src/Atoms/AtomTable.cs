@@ -83,22 +83,23 @@
             var size = Marshal.SizeOf(atomBasicInformation);
 
             IntPtr ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(atomBasicInformation, ptr, false);
 
-            UInt32 returnLength = 0;
-            var ntstatus = NtQueryInformationAtom(atom, 0, ptr, (UInt32)size, ref returnLength);
-            if (0xC0000008 == ntstatus)
+            try
             {
-                return null;
+                UInt32 returnLength = 0;
+                var ntstatus = NtQueryInformationAtom(atom, 0, ptr, (UInt32)size, ref returnLength);
+                if (0xC0000008 == ntstatus)
+                {
+                    return null;
+                }
+                ThrowIfFailed(ntstatus, "NtQueryInformationAtom");
+
+                atomBasicInformation = (ATOM_BASIC_INFORMATION)Marshal.PtrToStructure(ptr, typeof(ATOM_BASIC_INFORMATION));
             }
-            ThrowIfFailed(ntstatus, "NtQueryInformationAtom");
-
-            atomBasicInformation = (ATOM_BASIC_INFORMATION)Marshal.PtrToStructure(ptr, typeof(ATOM_BASIC_INFORMATION));
-
-            var bytes = new Byte[1024];
-            Marshal.Copy(ptr, bytes, 0, size);
-
-            Marshal.FreeHGlobal(ptr);
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
 
             return new AtomBasicInformation(atom, atomBasicInformation.ReferenceCount, atomBasicInformation.Pinned, atomBasicInformation.Name);
         }

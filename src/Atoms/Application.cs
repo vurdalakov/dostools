@@ -122,7 +122,7 @@
                     }
                 }
             }
-            if (_commandLineParser.IsOptionSet("la"))
+            else if (_commandLineParser.IsOptionSet("la"))
             {
                 var name = GetName("la");
                 var atom = AtomTable.LocalAdd(name);

@@ -162,10 +162,10 @@
                 }
                 else if (0 == s.IndexOfAny(prefixes)) // options
                 {
-                    if (s.IndexOfAny(valueSeparators) > 0) // option with value
+                    var pos = s.IndexOfAny(valueSeparators);
+                    if (pos > 0) // option with value
                     {
-                        var optionParts = s.Split(valueSeparators);
-                        _options.Add(optionParts[0].TrimStart(prefixes).ToLower(), optionParts[1]);
+                        _options.Add(s.Substring(0, pos).TrimStart(prefixes).ToLower(), s.Substring(pos + 1));
                     }
                     else // option without value
                     {

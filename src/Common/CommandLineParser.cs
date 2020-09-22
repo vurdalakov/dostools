@@ -1,4 +1,4 @@
-﻿namespace Vurdalakov
+﻿        namespace Vurdalakov
 {
     using System;
     using System.Collections.Generic;
@@ -68,6 +68,38 @@
 
             return false;
         }
+
+        // try get option
+
+        public Boolean TryGetOptionString(String optionName, out String optionValue)
+        {
+            if (this.OptionHasValue(optionName))
+            {
+                optionValue = this.GetOptionString(optionName);
+                return true;
+            }
+            else
+            {
+                optionValue = null;
+                return false;
+            }
+        }
+
+        public Boolean TryGetOptionInt(String optionName, out Int32 optionValue)
+        {
+            if (this.OptionHasValue(optionName))
+            {
+                optionValue = this.GetOptionInt(optionName);
+                return true;
+            }
+            else
+            {
+                optionValue = -1;
+                return false;
+            }
+        }
+
+        // get option
 
         public String GetOptionString(String optionName)
         {
